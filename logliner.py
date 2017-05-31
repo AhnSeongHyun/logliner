@@ -2,12 +2,20 @@ import argparse
 
 from collections import Sequence
 from multiprocessing import Pool
+from datetime import datetime
+
 
 class Log(object):
-    def __init__(self, log):
+    def __init__(self, date, log):
         self.log = log
+        if isinstance(date, datetime):
+            self.date = date
+        else:
+            raise Exception('date parameter need datetime type.')
+
     def __str__(self):
         return self.log
+
 
 class LogLiner(Sequence):
     def __init__(self):
@@ -35,8 +43,12 @@ class LogLiner(Sequence):
     def clear(self):
         self.list = []
 
+    def get_sorted_list(self):
+        import operator
+        return sorted(self.list, key=operator.attrgetter('date'))
 
-def task_parser(file_path, q):
+
+def task_parser(file_path, q, date_extractor):
     x = []
     with open(file_path, 'r') as f:
         while True:
@@ -44,8 +56,32 @@ def task_parser(file_path, q):
             if not line:
                 break
             if q in line:
-                x.append(Log(log=line))
+                d = date_extractor.extract(line)
+                x.append(Log(log=line, date=d))
     return x
+
+
+class BaseDateExtractor(object):
+    @staticmethod
+    def extract(log):
+        raise NotImplementedError
+
+
+class CustomDateExtractor(BaseDateExtractor):
+    @staticmethod
+    def extract(log):
+        try:
+            splitted_log = log.split('\t')
+            if len(splitted_log) > 2:
+                if splitted_log[1]:
+                    return datetime.strptime(splitted_log[1],  '%Y-%m-%d %H:%M:%S,%f')
+            else:
+                return None
+        except Exception:
+            import traceback
+            print(traceback.format_exc())
+            return None
+
 
 def task(args):
     print args
@@ -62,12 +98,11 @@ if __name__ == '__main__':
     input_file_list = args.input
     output_file_path = args.output
     q = args.q
-
     log_liner = LogLiner()
-
+    date_parser = CustomDateExtractor()
     if input_file_list and output_file_path and q:
         pool = Pool(processes=len(input_file_list))
-        map_result = pool.map(task, [(i, q) for i in input_file_list])
+        map_result = pool.map(task, [(i, q, CustomDateExtractor) for i in input_file_list])
         pool.close()
         pool.join()
         #
@@ -78,10 +113,7 @@ if __name__ == '__main__':
         for result in map_result:
             log_liner.extend(result)
 
-        print len(log_liner)
-        for l in log_liner:
-            print '='*100
-            print l
+
     else:
         print("ERROR ")
 
