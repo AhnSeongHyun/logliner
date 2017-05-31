@@ -45,7 +45,7 @@ class LogLiner(Sequence):
 
     def get_sorted_list(self):
         import operator
-        return sorted(self.list, key=operator.attrgetter('date'))
+        return sorted(self.list, key=lambda x : x.date)
 
 
 def task_parser(file_path, q, date_extractor):
@@ -105,14 +105,13 @@ if __name__ == '__main__':
         map_result = pool.map(task, [(i, q, CustomDateExtractor) for i in input_file_list])
         pool.close()
         pool.join()
-        #
-        # print len(map_result)
-        # print type(map_result[0]), len(map_result[0])
-        # print type(map_result[1]), len(map_result[1])
 
         for result in map_result:
             log_liner.extend(result)
 
+        sorted = log_liner.get_sorted_list()
+        for s in sorted:
+            print s
 
     else:
         print("ERROR ")
