@@ -1,51 +1,9 @@
+# -*- coding:utf-8 -*-
 import argparse
-
-from collections import Sequence
 from multiprocessing import Pool
-from datetime import datetime
 
-
-class Log(object):
-    def __init__(self, date, log):
-        self.log = log
-        if isinstance(date, datetime):
-            self.date = date
-        else:
-            raise Exception('date parameter need datetime type.')
-
-    def __str__(self):
-        return self.log
-
-
-class LogLiner(Sequence):
-    def __init__(self):
-        self.list = []
-
-    def __getitem__(self, index):
-        if self.list is None:
-            self.list = []
-        return self.list[index]
-
-    def __len__(self):
-        return len(self.list) if self.list else 0
-
-    def append(self, log):
-        if self.list is None:
-            self.list = []
-        self.list.append(log)
-
-    def extend(self, log_list):
-        if self.list is None:
-            self.list = []
-
-        self.list.extend(log_list)
-
-    def clear(self):
-        self.list = []
-
-    def get_sorted_list(self):
-        import operator
-        return sorted(self.list, key=lambda x : x.date)
+from containers import LogLiner
+from models import Log
 
 
 def task_parser(file_path, q, date_extractor):
@@ -61,48 +19,41 @@ def task_parser(file_path, q, date_extractor):
     return x
 
 
-class BaseDateExtractor(object):
-    @staticmethod
-    def extract(log):
-        raise NotImplementedError
-
-
-class CustomDateExtractor(BaseDateExtractor):
-    @staticmethod
-    def extract(log):
-        try:
-            splitted_log = log.split('\t')
-            if len(splitted_log) > 2:
-                if splitted_log[1]:
-                    return datetime.strptime(splitted_log[1],  '%Y-%m-%d %H:%M:%S,%f')
-            else:
-                return None
-        except Exception:
-            import traceback
-            print(traceback.format_exc())
-            return None
-
-
 def task(args):
     print args
     return task_parser(*args)
 
+
+def create_custom_date_extractor(class_path):
+
+    import importlib
+    class_path_splitted = class_path.split('.')
+    count = len(class_path_splitted)
+    last = count -1
+    if count > 1:
+        module = importlib.import_module(".".join(class_path_splitted[:last]))
+        custom_date_extractor_class = getattr(module, class_path_splitted[last])
+        return custom_date_extractor_class
+    else:
+        raise Exception('Wrong custom date extractor class path')
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-input", help='input file path list', nargs="*")
     parser.add_argument("-output", help='output file path')
     parser.add_argument("-q", help="searching keyword")
+    parser.add_argument("-c", help="data extractor class, my_package.my_module.MyClass")
     args = parser.parse_args()
 
     input_file_list = args.input
     output_file_path = args.output
     q = args.q
+    class_path = args.c
     log_liner = LogLiner()
-    date_parser = CustomDateExtractor()
+    custom_date_extractor_class = create_custom_date_extractor(class_path=class_path)
     if input_file_list and output_file_path and q:
         pool = Pool(processes=len(input_file_list))
-        map_result = pool.map(task, [(i, q, CustomDateExtractor) for i in input_file_list])
+        map_result = pool.map(task, [(i, q, custom_date_extractor_class) for i in input_file_list])
         pool.close()
         pool.join()
 
@@ -116,8 +67,4 @@ if __name__ == '__main__':
     else:
         print("ERROR ")
 
-
-
-# python loglin.py -out merge.txt -in in1.txt in2.txt
-# loglin -out merge.txt -in in1.txt in2.txt
-# python loglin.py -output 12 -input ./log_files/a.log ./log_files/b.log -q 201705301451479331561400
+# python logliner.py -output 12 -input ./log_files/a.log ./log_files/b.log -q 201705301451479331561400 -c date_extractor.custom_date_extractor.CustomDateExtractor
