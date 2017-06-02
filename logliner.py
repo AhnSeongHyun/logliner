@@ -75,9 +75,9 @@ if __name__ == '__main__':
 
         sorted_result = log_liner.get_sorted_list()
 
-        presenter = PresenterFactory.get_presenter(format=conf.output.format, path=conf.output.path)
+        presenter = PresenterFactory.get_presenter(format=conf.output.format, path=conf.output.path, q=q)
         presenter.present(sorted_result)
-
+        print "END"
     else:
         print("ERROR ")
 

@@ -2,8 +2,8 @@ input:
     - ./log_files/a.log
     - ./log_files/b.log
 output:
-    format: file
-    path: ./report.txt
+    format: html
+    path: ./report.html
 
 q : 201705301451479331561400
 date_extractor: date_extractor.custom_date_extractor.CustomDateExtractor

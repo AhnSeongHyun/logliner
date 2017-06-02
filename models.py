@@ -16,3 +16,8 @@ class Log(object):
 
     def __repr__(self):
         return self.log
+
+    @property
+    def base_file_name(self):
+        from os.path import basename
+        return basename(self.log_file)
