@@ -6,6 +6,7 @@ from attrdict import AttrDict
 
 from containers import LogLiner
 from models import Log
+from presenter import PresenterFactory
 
 
 def task_parser(file_path, q, date_extractor):
@@ -17,12 +18,11 @@ def task_parser(file_path, q, date_extractor):
                 break
             if q in line:
                 d = date_extractor.extract(line)
-                x.append(Log(log=line, date=d))
+                x.append(Log(log=line, date=d, log_file=file_path))
     return x
 
 
 def task(args):
-    print args
     return task_parser(*args)
 
 
@@ -57,14 +57,14 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     conf = AttrDict(get_config(args.c))
-    print(conf)
+
     input_file_list = conf.input
     q = str(conf.q)
     class_path = conf.date_extractor
 
     log_liner = LogLiner()
     custom_date_extractor_class = create_custom_date_extractor(class_path=class_path)
-    if input_file_list and q:
+    if input_file_list and q and custom_date_extractor_class:
         pool = Pool(processes=len(input_file_list))
         map_result = pool.map(task, [(i, q, custom_date_extractor_class) for i in input_file_list])
         pool.close()
@@ -73,11 +73,10 @@ if __name__ == '__main__':
         for result in map_result:
             log_liner.extend(result)
 
-        sorted = log_liner.get_sorted_list()
-        for s in sorted:
-            print s
+        sorted_result = log_liner.get_sorted_list()
 
-        # todo : output에 따라서 출력 형식을 정한다.
+        presenter = PresenterFactory.get_presenter(format=conf.output.format, path=conf.output.path)
+        presenter.present(sorted_result)
 
     else:
         print("ERROR ")

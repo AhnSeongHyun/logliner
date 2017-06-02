@@ -7,10 +7,10 @@ class CustomDateExtractor(BaseDateExtractor):
     @staticmethod
     def extract(log):
         try:
-            splitted_log = log.split('\t')
-            if len(splitted_log) > 2:
-                if splitted_log[1]:
-                    return datetime.strptime(splitted_log[1],  '%Y-%m-%d %H:%M:%S,%f')
+            splited_log = log.split('\t')
+            if len(splited_log) > 2:
+                if splited_log[1]:
+                    return datetime.strptime(splited_log[1],  '%Y-%m-%d %H:%M:%S,%f')
             else:
                 return None
         except Exception:

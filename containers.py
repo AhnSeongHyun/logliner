@@ -29,5 +29,4 @@ class LogLiner(Sequence):
         self.list = []
 
     def get_sorted_list(self):
-        import operator
         return sorted(self.list, key=lambda x : x.date)
