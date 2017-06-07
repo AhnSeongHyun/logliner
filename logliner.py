@@ -1,4 +1,5 @@
 # -*- coding:utf-8 -*-
+import sys
 import argparse
 from multiprocessing import Pool
 
@@ -55,6 +56,9 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", help="conf file(.yaml)")
     args = parser.parse_args()
+    if not args.c:
+        parser.print_help()
+        sys.exit(2)
 
     conf = AttrDict(get_config(args.c))
 
