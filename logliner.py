@@ -52,6 +52,12 @@ def get_config(conf_file_path):
     data = load(stream, Loader=Loader)
     return data
 
+def print_conf(conf):
+    if conf:
+        print('conf below:')
+        for k, v in conf.items():
+            print("\t%s : %s" %(k, v))
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", help="conf file(.yaml)")
@@ -61,6 +67,7 @@ if __name__ == '__main__':
         sys.exit(2)
 
     conf = AttrDict(get_config(args.c))
+    print_conf(conf=conf)
 
     input_file_list = conf.input
     q = str(conf.q)
@@ -81,7 +88,7 @@ if __name__ == '__main__':
 
         presenter = PresenterFactory.get_presenter(format=conf.output.format, path=conf.output.path, q=q)
         presenter.present(sorted_result)
-        print "END"
+        print("END - output : %s "  % conf.output.path)
     else:
         print("ERROR ")
 

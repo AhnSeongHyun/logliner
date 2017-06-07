@@ -18,7 +18,7 @@ output:
     format: file
     path: ./result/report.txt
 
-q : 201705301451479331561400
+q : 20170530145147dkjvosuiier
 date_extractor: date_extractor.custom_date_extractor.CustomDateExtractor
 ```
 

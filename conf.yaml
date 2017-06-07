@@ -5,5 +5,5 @@ output:
     format: html
     path: ./report.html
 
-q : 201705301451479331561400
+q : invalid ddios email
 date_extractor: date_extractor.custom_date_extractor.CustomDateExtractor
