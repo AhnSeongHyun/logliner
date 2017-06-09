@@ -13,6 +13,7 @@ logliner
 
 ```yaml
 input:
+  path:
     - ./log_files/a.log
     - ./log_files/b.log
 output:

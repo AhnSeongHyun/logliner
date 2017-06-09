@@ -28,7 +28,6 @@ def task(args):
 
 
 def create_custom_date_extractor(class_path):
-
     import importlib
     class_path_splited = class_path.split('.')
     count = len(class_path_splited)
@@ -42,7 +41,6 @@ def create_custom_date_extractor(class_path):
 
 def get_config(conf_file_path):
     from yaml import load
-
     try:
         from yaml import CLoader as Loader, CDumper as Dumper
     except ImportError:
@@ -53,7 +51,7 @@ def get_config(conf_file_path):
     return data
 
 def print_conf(conf):
-    if conf:
+    if conf and isinstance(conf, dict):
         print('conf below:')
         for k, v in conf.items():
             print("\t%s : %s" %(k, v))
@@ -69,7 +67,7 @@ if __name__ == '__main__':
     conf = AttrDict(get_config(args.c))
     print_conf(conf=conf)
 
-    input_file_list = conf.input
+    input_file_list = conf.input.path
     q = str(conf.q)
     class_path = conf.date_extractor
 
