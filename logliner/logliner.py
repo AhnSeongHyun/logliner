@@ -1,13 +1,13 @@
 # -*- coding:utf-8 -*-
-import sys
 import argparse
+import sys
 from multiprocessing import Pool
 
 from attrdict import AttrDict
 
-from containers import LogLiner
-from models import Log
-from presenter import PresenterFactory
+from logliner.models import Log
+from logliner.presenter import PresenterFactory
+from logliner.containers import LogLiner
 
 
 def task_parser(file_path, q, date_extractor):
@@ -45,10 +45,14 @@ def get_config(conf_file_path):
         from yaml import CLoader as Loader, CDumper as Dumper
     except ImportError:
         from yaml import Loader, Dumper
+    import os
+    if os.path.exists(conf_file_path):
+        stream = open(conf_file_path, 'r')
+        data = load(stream, Loader=Loader)
+        return data
+    else:
+        return {}
 
-    stream = file(conf_file_path, 'r')
-    data = load(stream, Loader=Loader)
-    return data
 
 def print_conf(conf):
     if conf and isinstance(conf, dict):
@@ -66,6 +70,10 @@ if __name__ == '__main__':
 
     conf = AttrDict(get_config(args.c))
     print_conf(conf=conf)
+
+    if not conf:
+        print("ERROR: conf is wrong")
+        sys.exit(2)
 
     input_file_list = conf.input.path
     q = str(conf.q)

@@ -31,5 +31,5 @@ date_extractor: date_extractor.custom_date_extractor.CustomDateExtractor
     - path : file path (stdout not required)
 
 - q : searching keyword 
-- date_extractor : user-defined `BaseDateExtractor`' subclass, `my_package.my_module.MyClass`
+- date_extractor : user-defined `BaseDateExtractor` subclass, `my_package.my_module.MyClass`
 
