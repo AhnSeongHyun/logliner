@@ -2,7 +2,7 @@ logliner [![Build Status](https://travis-ci.org/AhnSeongHyun/logliner.svg?branch
 ========
 
 - find a keyword in multiple log files
-- sort log datetime created by user-defined `BaseDateExtractor`' subclass 
+- sort log datetime created by user-defined `BaseDateExtractor` subclass 
 - present log files according to datetime ascending. 
 
  

@@ -1,10 +1,15 @@
 # -*- coding:utf-8 -*-
 import argparse
+import os
 import sys
-from multiprocessing import Pool
 
 from attrdict import AttrDict
 
+path = os.path.dirname(sys.modules[__name__].__file__)
+path = os.path.join(path, '..')
+sys.path.insert(0, path)
+
+from multiprocessing.pool import Pool
 from logliner.models import Log
 from logliner.presenter import PresenterFactory
 from logliner.containers import LogLiner
