@@ -15,8 +15,7 @@ class LoglinerTestCase(unittest.TestCase):
         conf2 = get_config(conf_file_path="./tests/test_empty_conf.yaml")
 
         self.assertEqual(conf1['date_extractor'], 'test')
-        self.assertEqual(len(conf2), 0)
-
+        self.assertEqual(conf2, None)
 
     def test_print_conf(self):
         from logliner.logliner import print_conf
