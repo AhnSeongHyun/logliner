@@ -6,6 +6,7 @@ import sys
 from attrdict import AttrDict
 
 from multiprocessing.pool import Pool
+
 from models import Log
 from presenter import PresenterFactory
 from containers import LogLiner
