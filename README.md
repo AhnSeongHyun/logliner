@@ -4,8 +4,16 @@ logliner [![Build Status](https://travis-ci.org/AhnSeongHyun/logliner.svg?branch
 - find a keyword in multiple log files
 - sort log datetime created by user-defined `BaseDateExtractor`' subclass 
 - present log files according to datetime ascending. 
+
  
-### config.yaml 
+### run 
+
+```python
+python logliner.py -c ./conf.yaml
+```
+
+
+### config
 
  - Using `yaml` format. 
 
