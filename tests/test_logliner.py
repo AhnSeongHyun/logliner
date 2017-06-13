@@ -1,6 +1,5 @@
 import unittest
 
-
 class LoglinerTestCase(unittest.TestCase):
     def test_task_parser(self):
         pass
@@ -11,8 +10,8 @@ class LoglinerTestCase(unittest.TestCase):
     def test_get_config(self):
         from logliner.logliner import get_config
         get_config(conf_file_path="not_exist.conf")
-        conf1 = get_config(conf_file_path="./tests/test_conf.yaml")
-        conf2 = get_config(conf_file_path="./tests/test_empty_conf.yaml")
+        conf1 = get_config(conf_file_path="./test_conf.yaml")
+        conf2 = get_config(conf_file_path="./test_empty_conf.yaml")
 
         self.assertEqual(conf1['date_extractor'], 'test')
         self.assertEqual(conf2, None)
