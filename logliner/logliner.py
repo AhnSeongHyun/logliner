@@ -2,7 +2,7 @@
 import argparse
 import os
 import sys
-
+sys.path.append("..")
 from attrdict import AttrDict
 
 from multiprocessing.pool import Pool

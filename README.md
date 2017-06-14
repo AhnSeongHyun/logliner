@@ -1,4 +1,4 @@
-logliner [![Build Status](https://travis-ci.org/AhnSeongHyun/logliner.svg?branch=master)](https://travis-ci.org/AhnSeongHyun/logliner)
+logliner 
 ========
 
 - find a keyword in multiple log files
