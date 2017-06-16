@@ -3,15 +3,35 @@
 
 __author__ = 'ahnseonghyun'
 
-from setuptools import setup, find_packages
 
-version = '0.0.1'
+try:
+    from setuptools import setup
+except ImportError:
+    from distutils.core import setup
+
+from logliner import __version__
+
+
+with open('README.md') as readme_file:
+    readme = readme_file.read()
+
 
 setup(name='logliner',
-      version=version,
-      description="A module of downloading image from URL and resizing.",
+      version=__version__,
+      description="find a keyword in multiple log files and merge according datetime",
+      long_description=readme,
+      author='AhnSeongHyun',
+      author_email='sh84.ahn@gmail.com',
+      url='https://github.com/AhnSeongHyun/logliner',
+      packages=[
+          'logliner',
+      ],
+      include_package_data=True,
+      zip_safe=False,
+      keywords='log timeline',
       classifiers=[
           'License :: OSI Approved :: MIT License',
+          'Natural Language :: English',
           'Development Status :: 4 - Beta',
           'Intended Audience :: Developers',
           'Programming Language :: Python :: 2.7',
@@ -19,21 +39,16 @@ setup(name='logliner',
           'Topic :: Utilities',
           'Topic :: Software Development :: Libraries :: Python Modules',
       ],
-      keywords='log timeline',
-      author='AhnSeongHyun',
-      author_email='sh84.ahn@gmail.com',
-      url='https://github.com/AhnSeongHyun/logliner',
       license='MIT',
-      packages=find_packages(exclude=['ez_setup', 'tests']),
-      include_package_data=True,
-      zip_safe=False,
       install_requires=[
           'attrdict',
-          'pyyaml',
-          'jinja2'
+          'PyYAML',
+          'Jinja2'
       ],
-      entry_points="""
-      # -*- Entry points: -*-
-      """,
+      entry_points={
+          'console_scripts': [
+              'logliner=logliner.logliner:main',
+          ],
+      },
 
       )

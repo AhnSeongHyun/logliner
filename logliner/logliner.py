@@ -1,18 +1,10 @@
 # -*- coding:utf-8 -*-
 import argparse
-import os
 import sys
-sys.path.append("..")
 from attrdict import AttrDict
 
-from multiprocessing.pool import Pool
-
-from models import Log
-from presenter import PresenterFactory
-from containers import LogLiner
-
-
 def task_parser(file_path, q, date_extractor):
+    from .models import Log
     x = []
     with open(file_path, 'r') as f:
         while True:
@@ -30,8 +22,11 @@ def task(args):
 
 
 def create_custom_date_extractor(class_path):
+    import os, sys
+    print("path:" + sys.argv[0])
     import importlib
     class_path_splited = class_path.split('.')
+    print(class_path_splited)
     count = len(class_path_splited)
     last = count - 1
     if count > 1:
@@ -62,7 +57,8 @@ def print_conf(conf):
         for k, v in conf.items():
             print("\t%s : %s" %(k, v))
 
-if __name__ == '__main__':
+
+def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", help="conf file(.yaml)")
     args = parser.parse_args()
@@ -81,9 +77,12 @@ if __name__ == '__main__':
     q = str(conf.q)
     class_path = conf.date_extractor
 
+    from .presenter import PresenterFactory
+    from .containers import LogLiner
     log_liner = LogLiner()
     custom_date_extractor_class = create_custom_date_extractor(class_path=class_path)
     if input_file_list and q and custom_date_extractor_class:
+        from multiprocessing.pool import Pool
         pool = Pool(processes=len(input_file_list))
         map_result = pool.map(task, [(i, q, custom_date_extractor_class) for i in input_file_list])
         pool.close()
@@ -96,7 +95,10 @@ if __name__ == '__main__':
 
         presenter = PresenterFactory.get_presenter(format=conf.output.format, path=conf.output.path, q=q)
         presenter.present(sorted_result)
-        print("END - output : %s "  % conf.output.path)
+        print("END - output : %s " % conf.output.path)
     else:
         print("ERROR ")
 
+
+if __name__ == '__main__':
+    main()
