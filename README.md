@@ -5,13 +5,29 @@ logliner
 - sort log datetime created by user-defined `BaseDateExtractor` subclass 
 - present log files according to datetime ascending. 
 
- 
-### run 
-
-```python
-python logliner.py -c ./conf.yaml
+### install 
+```shell
+$ python setup.py install 
 ```
 
+### run 
+
+```shell
+
+$ logliner 
+usage: logliner [-h] [-c C]
+
+optional arguments:
+  -h, --help  show this help message and exit
+  -c C        conf file(.yaml)
+
+
+```
+
+```shell
+$ cd ./example        
+$ logliner -c ./conf.yaml
+```
 
 ### config
 
@@ -27,7 +43,7 @@ output:
     path: ./result/report.txt
 
 q : 20170530145147dkjvosuiier
-date_extractor: date_extractor.custom_date_extractor.CustomDateExtractor
+date_extractor: custom_date_extractor.CustomDateExtractor
 ```
 
 - input : file list 

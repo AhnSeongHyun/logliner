@@ -22,11 +22,8 @@ def task(args):
 
 
 def create_custom_date_extractor(class_path):
-    import os, sys
-    print("path:" + sys.argv[0])
     import importlib
     class_path_splited = class_path.split('.')
-    print(class_path_splited)
     count = len(class_path_splited)
     last = count - 1
     if count > 1:
@@ -59,6 +56,8 @@ def print_conf(conf):
 
 
 def main():
+    import os
+    sys.path.append(os.getcwd())
     parser = argparse.ArgumentParser()
     parser.add_argument("-c", help="conf file(.yaml)")
     args = parser.parse_args()
