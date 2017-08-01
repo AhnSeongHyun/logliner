@@ -1,5 +1,5 @@
 # -*- coding:utf-8 -*-
-from logliner.date_extractor.base import BaseDateExtractor
+from logliner import BaseDateExtractor
 from datetime import datetime
 
 
